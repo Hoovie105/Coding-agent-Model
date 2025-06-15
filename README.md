@@ -1,17 +1,19 @@
 # Coding Agent Model
 
-This project is an intelligent coding agent designed to automate workflows, process prompts, and interact with external data sources. It is structured for modularity and extensibility, with a planned PyQt5 front end for user interaction.
+This project is an intelligent coding agent designed to automate workflows, process prompts, and interact with external data sources. It features a modern PyQt5 GUI for user interaction and a modular backend for extensibility.
 
 ## Features
 - Modular backend logic in Python
 - Workflow automation and prompt processing
-- Planned PyQt5 GUI for easy interaction
-- Environment variable management via `.env` (hidden from version control)
+- PyQt5 GUI for easy, modern interaction (gui.py)
+- Environment variable management via .env
 
 ## Project Structure
 ```
-main.py                # Entry point for backend logic
+main.py                # Entry point for backend logic (CLI)
+gui.py                 # PyQt5 GUI application
 pyproject.toml         # Project dependencies and configuration
+requirements.txt       # Python dependencies
 src/
     __init__.py
     firecrawl.py       # Data crawling and external data logic
@@ -42,8 +44,10 @@ src/
 python main.py
 ```
 
-## PyQt5 Front End (Coming Soon)
-A PyQt5-based GUI will be added to provide a user-friendly interface for interacting with the agent.
+## Running the PyQt5 GUI
+```sh
+python gui.py
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
