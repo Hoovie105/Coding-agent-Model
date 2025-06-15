@@ -8,7 +8,8 @@ from .propmpts import DeveloperToolsPrompts
 
 
 class Workflow:
-    def __init__(self):
+    def __init__(self, logger=print):
+        self.logger = logger
         self.firecrawl = FirecrawlService()
         self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.1)
         self.prompts = DeveloperToolsPrompts()
@@ -26,7 +27,7 @@ class Workflow:
         return graph.compile()
 
     def _extract_tools_step(self, state: ResearchState) -> Dict[str, Any]:
-        print(f"🔍 Finding articles about: {state.query}")
+        self.logger(f"🔍 Finding articles about: {state.query}")
 
         article_query = f"{state.query} tools comparison best alternatives"
         search_results = self.firecrawl.search_companies(article_query, num_results=3)
@@ -50,10 +51,10 @@ class Workflow:
                 for name in response.content.strip().split("\n")
                 if name.strip()
             ]
-            print(f"Extracted tools: {', '.join(tool_names[:5])}")
+            self.logger(f"Extracted tools: {', '.join(tool_names[:5])}")
             return {"extracted_tools": tool_names}
         except Exception as e:
-            print(e)
+            self.logger(e)
             return {"extracted_tools": []}
 
     def _analyze_company_content(self, company_name: str, content: str) -> CompanyAnalysis:
@@ -68,7 +69,7 @@ class Workflow:
             analysis = structured_llm.invoke(messages)
             return analysis
         except Exception as e:
-            print(e)
+            self.logger(e)
             return CompanyAnalysis(
                 pricing_model="Unknown",
                 is_open_source=None,
@@ -84,7 +85,7 @@ class Workflow:
         extracted_tools = getattr(state, "extracted_tools", [])
 
         if not extracted_tools:
-            print("⚠️ No extracted tools found, falling back to direct search")
+            self.logger("⚠️ No extracted tools found, falling back to direct search")
             search_results = self.firecrawl.search_companies(state.query, num_results=4)
             tool_names = [
                 result.get("metadata", {}).get("title", "Unknown")
@@ -93,7 +94,7 @@ class Workflow:
         else:
             tool_names = extracted_tools[:4]
 
-        print(f"🔬 Researching specific tools: {', '.join(tool_names)}")
+        self.logger(f"🔬 Researching specific tools: {', '.join(tool_names)}")
 
         companies = []
         for tool_name in tool_names:
@@ -129,7 +130,7 @@ class Workflow:
         return {"companies": companies}
 
     def _analyze_step(self, state: ResearchState) -> Dict[str, Any]:
-        print("Generating recommendations")
+        self.logger("Generating recommendations")
 
         company_data = ", ".join([
             company.json() for company in state.companies
