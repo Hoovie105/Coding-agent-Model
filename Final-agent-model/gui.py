@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QIcon("appicon.ico"))
+        self.setWindowIcon(QIcon("favicon.ico"))
         self.setWindowTitle("Coding Agent Model - PyQt5 GUI")
 
         # Dynamically set window size to 60% of screen width and 70% of screen height
@@ -108,7 +108,7 @@ class MainWindow(QMainWindow):
         self.thread.start()
 
     def display_results(self, result, query):
-        output = f"<b>Results for: {query}</b><br>"
+        output = f"<b></br>Results for: {query}</b><br>"
         for i, company in enumerate(result.companies, 1):
             output += f"<br><b>{i}. 🏢 {company.name}</b><br>"
             output += f"   🌐 <b>Website:</b> {company.website}<br>"
@@ -213,7 +213,6 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("appicon.ico"))
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
